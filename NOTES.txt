@@ -1,0 +1,11 @@
+to add capacitor
+add the following line below, except you had enabled it when creating the app
+1). ionic integrations enable capacitor
+
+
+to add support for android
+1). Build the app once (npm run build)
+2). ionic capacitor add android
+3)> to run on android (ionic capacitor run android)
+
+//Always use Ctrl + Space to see the options available in any external object
