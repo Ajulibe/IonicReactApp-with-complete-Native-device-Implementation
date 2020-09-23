@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import {
   IonPage,
   IonHeader,
@@ -26,7 +26,9 @@ import {
   FilesystemDirectory,
 } from "@capacitor/core";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
+import { useHistory } from "react-router-dom";
 
+import MemoriesContext from "../data/memory-context";
 import "./NewMemory.css";
 
 const { Camera, Filesystem } = Plugins;
@@ -37,6 +39,10 @@ const NewMemory: React.FC = () => {
     preview: string;
   }>();
   const [chosenMemoryType, setChosenMemoryType] = useState<"good" | "bad">();
+
+  const memoriesCtx = useContext(MemoriesContext);
+
+  const history = useHistory();
 
   //USING REF INSTEAD OF STATE TO SPICE THINGS UP :)
   const titleRef = useRef<HTMLIonInputElement>(null);
@@ -72,6 +78,7 @@ const NewMemory: React.FC = () => {
       !takenPhoto ||
       !chosenMemoryType
     ) {
+      return;
     }
 
     const fileName = new Date().getTime() + ".jpeg";
@@ -85,6 +92,10 @@ const NewMemory: React.FC = () => {
       data: base64,
       directory: FilesystemDirectory.Data,
     });
+
+    memoriesCtx.addMemory(fileName, enteredTitle.toString(), chosenMemoryType);
+
+    history.length > 0 ? history.goBack() : history.replace("/good-memories");
   };
 
   const selectMemoryTypeHandler = (event: CustomEvent) => {
