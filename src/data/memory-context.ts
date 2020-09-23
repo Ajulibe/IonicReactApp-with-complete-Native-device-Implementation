@@ -5,6 +5,7 @@ export interface Memory {
   imagePath: string;
   title: string;
   type: "good" | "bad";
+  base64Url: string;
 }
 
 //CONTEXT in Typescript is always made up of
@@ -15,7 +16,12 @@ export interface Memory {
 
 const MemoriesContext = React.createContext<{
   memories: Memory[];
-  addMemory: (path: string, title: string, type: "good" | "bad") => void;
+  addMemory: (
+    path: string,
+    base64Data: string,
+    title: string,
+    type: "good" | "bad"
+  ) => void;
 }>({ memories: [], addMemory: () => {} });
 
 export default MemoriesContext;
