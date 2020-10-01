@@ -49,6 +49,8 @@ const MemoriesContextProvider: React.FC = (props) => {
     setMemories((curMemories) => {
       return [...curMemories, newMemory];
     });
+
+    console.log(memories);
   };
 
   const initContext = useCallback(async () => {

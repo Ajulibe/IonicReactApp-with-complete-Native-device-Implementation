@@ -8,7 +8,7 @@ const MemoriesList: React.FC<{ items: Memory[] }> = (props) => {
     <>
       {" "}
       {props.items.map((memory) => (
-        <IonRow key="memory.id">
+        <IonRow key={memory.id}>
           <IonCol>
             <MemoryItem image={memory.base64Url} title={memory.title} />
           </IonCol>

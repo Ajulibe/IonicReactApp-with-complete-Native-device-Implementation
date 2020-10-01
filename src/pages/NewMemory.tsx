@@ -24,6 +24,7 @@ import {
   CameraResultType,
   CameraSource,
   FilesystemDirectory,
+  Capacitor,
 } from "@capacitor/core";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import { useHistory } from "react-router-dom";
@@ -35,7 +36,7 @@ const { Camera, Filesystem } = Plugins;
 
 const NewMemory: React.FC = () => {
   const [takenPhoto, setTakenPhoto] = useState<{
-    path: string;
+    path: string | undefined;
     preview: string;
   }>();
   const [chosenMemoryType, setChosenMemoryType] = useState<"good" | "bad">();
@@ -46,31 +47,63 @@ const NewMemory: React.FC = () => {
 
   //USING REF INSTEAD OF STATE TO SPICE THINGS UP :)
   const titleRef = useRef<HTMLIonInputElement>(null);
+  const filePickerRef = useRef<HTMLInputElement>(null);
+
+  const openFilePicker = () => {
+    filePickerRef.current!.click();
+  };
+
+  const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target!.files![0];
+    console.log(file);
+    //this is an inbuilt JS Api
+    const fr = new FileReader();
+    fr.onload = () => {
+      setTakenPhoto({
+        path: undefined,
+        preview: fr.result!.toString(),
+      });
+    };
+
+    fr.readAsDataURL(file);
+  };
 
   const takePhotoHandler = async () => {
-    const photo = await Camera.getPhoto({
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Camera,
-      quality: 90,
-      width: 500,
-    });
-    console.log(photo);
-
-    if (!photo || !photo.path || !photo.webPath) {
+    //incase there is no file picker
+    if (Capacitor.isPluginAvailable("Camera")) {
+      openFilePicker();
       return;
     }
+    try {
+      const photo = await Camera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera,
+        quality: 90,
+        width: 500,
+      });
+      // console.log(photo);
 
-    //NOTE THAT IF STATEMENT HELPED TO REMOVE THE UNDEFINED ERROR TYPESCRIPT WAS
-    //SHOWING US.REMOVE IT TO SEE
-    setTakenPhoto({
-      path: photo.path,
-      preview: photo.webPath,
-    });
+      if (!photo || !photo.webPath) {
+        return;
+      }
+
+      //NOTE THAT IF STATEMENT HELPED TO REMOVE THE UNDEFINED ERROR TYPESCRIPT WAS
+      //SHOWING US.REMOVE IT TO SEE
+      setTakenPhoto({
+        path: photo.path ? photo.path : "path",
+        preview: photo.webPath,
+      });
+    } catch (error) {
+      openFilePicker();
+    }
   };
 
   const addMemoryHandler = async () => {
+    console.log("started");
     //get the content of the input
     const enteredTitle = titleRef.current?.value;
+    console.log(takenPhoto);
+    console.log(chosenMemoryType);
 
     if (
       !enteredTitle ||
@@ -83,6 +116,8 @@ const NewMemory: React.FC = () => {
 
     const fileName = new Date().getTime() + ".jpeg";
 
+    console.log(fileName);
+
     //Here wer converting the gotten photo preview to a base64 string and storing
     //the base64 string as the data
     const base64 = await base64FromPath(takenPhoto!.preview);
@@ -92,7 +127,7 @@ const NewMemory: React.FC = () => {
       data: base64,
       directory: FilesystemDirectory.Data,
     });
-
+    console.log(memoriesCtx.addMemory);
     memoriesCtx.addMemory(
       fileName,
       base64,
@@ -131,7 +166,11 @@ const NewMemory: React.FC = () => {
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonSelect onIonChange={selectMemoryTypeHandler} value="good">
+              <IonSelect
+                onIonChange={selectMemoryTypeHandler}
+                value={chosenMemoryType}
+                placeholder="Select One"
+              >
                 <IonSelectOption value="good">Good Memory</IonSelectOption>
                 <IonSelectOption value="bad">Bad Memory</IonSelectOption>
               </IonSelect>
@@ -140,13 +179,19 @@ const NewMemory: React.FC = () => {
           <IonRow className="ion-text-center">
             <IonCol>
               <div className="image-preview">
-                {!takenPhoto && <h3>Np Photo Chosen</h3>}
+                {!takenPhoto && <h3>No Photo Chosen</h3>}
                 {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
               </div>
               <IonButton fill="clear" onClick={takePhotoHandler}>
                 <IonIcon icon={camera} slot="start"></IonIcon>
                 <IonLabel>Take Photo</IonLabel>
               </IonButton>
+              <input
+                type="file"
+                hidden
+                ref={filePickerRef}
+                onChange={pickFileHandler}
+              />
             </IonCol>
           </IonRow>
           <IonRow className="ion-margin-top">

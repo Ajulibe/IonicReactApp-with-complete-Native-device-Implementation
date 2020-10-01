@@ -13,6 +13,7 @@ import {
   IonFabButton,
   IonRow,
   IonCol,
+  IonGrid,
 } from "@ionic/react";
 import { add } from "ionicons/icons";
 
@@ -41,14 +42,16 @@ const BadMemories: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {badMemories.length === 0 && (
-          <IonRow>
-            <IonCol>
-              <h2>No badd memories found</h2>
-            </IonCol>
-          </IonRow>
-        )}
-        <MemoriesList items={badMemories} />
+        <IonGrid>
+          {badMemories.length === 0 && (
+            <IonRow>
+              <IonCol>
+                <h2>No badd memories found</h2>
+              </IonCol>
+            </IonRow>
+          )}
+          <MemoriesList items={badMemories} />
+        </IonGrid>
         {!isPlatform("ios") && (
           <IonFab vertical="bottom" horizontal="end" slot="fixed">
             <IonFabButton routerLink="/new-memory">
