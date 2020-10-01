@@ -22,6 +22,7 @@ const MemoriesContext = React.createContext<{
     title: string,
     type: "good" | "bad"
   ) => void;
-}>({ memories: [], addMemory: () => {} });
+  initContext: () => void;
+}>({ memories: [], addMemory: () => {}, initContext: () => {} });
 
 export default MemoriesContext;

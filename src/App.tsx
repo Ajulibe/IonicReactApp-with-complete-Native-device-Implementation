@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   IonApp,
   IonRouterOutlet,
@@ -15,7 +15,8 @@ import { happy, sad } from "ionicons/icons";
 import GoodMemories from "./pages/GoodMemories";
 import BadMemories from "./pages/BadMemories";
 import NewMemory from "./pages/NewMemory";
-import MemoriesContextProvider from "./data/MemoriesContextProvider";
+
+import MemoriesContext from "./data/memory-context";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -37,10 +38,20 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import "./theme/theme.css";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <MemoriesContextProvider>
+const App: React.FC = () => {
+  const memoriesCtx = useContext(MemoriesContext);
+
+  //whenever our app runs this is initiated and the memory state is set
+  //with what has been stored in the database.
+  const { initContext } = memoriesCtx;
+  useEffect(() => {
+    //anytime we are passinf a function to a useEffect make it a callback
+    initContext();
+  }, [initContext]);
+
+  return (
+    <IonApp>
+      <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
             <Route path="/good-memories">
@@ -68,9 +79,9 @@ const App: React.FC = () => (
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
-      </MemoriesContextProvider>
-    </IonReactRouter>
-  </IonApp>
-);
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
