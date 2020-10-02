@@ -70,7 +70,8 @@ const NewMemory: React.FC = () => {
 
   const takePhotoHandler = async () => {
     //incase there is no file picker
-    if (Capacitor.isPluginAvailable("Camera")) {
+    console.log(Capacitor.isPluginAvailable("Camera"));
+    if (!Capacitor.isPluginAvailable("Camera")) {
       openFilePicker();
       return;
     }
@@ -111,6 +112,7 @@ const NewMemory: React.FC = () => {
       !takenPhoto ||
       !chosenMemoryType
     ) {
+      alert("Select all options");
       return;
     }
 

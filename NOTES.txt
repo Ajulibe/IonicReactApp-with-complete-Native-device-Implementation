@@ -18,4 +18,133 @@ INSTALL A NEW PACKAGE
 npm install --save @ionic/pwa-elements
 add some 2 lines of code to the index.tsx
 
+FOR CODE REFACTORING
+REUSABLE TYPES
+
+OBJECT-LIKE TYPES
+we can create reuseable tpyes for defining them in the interface object
+definition model.
+EXAMPLE for the Photo Type
+//
+
+ export interface Photo {
+    path: string | undefined;
+    preview: string;
+}
+
+//Remember to import {Photo} from "./dfk/efwf"
+
+Then replace all occureneces of this type definition with Photo.
+
+STRING UNION-LIKE TYPES
+E.G type: 'string' | undefined
+          'good' | 'bad'
+
+Define it as;
+export type MemoryType = 'good' | 'bad'  where MemoryType is any name of your choice
+
+//Remember to import {MemoryType} from "./dfk/efwf"
+
+Then replace all occureneces of this type definition with MemoryType.
+
 //Always use Ctrl + Space to see the options available in any external object
+
+BUILDING THE FINAL VERSION OF THE APP FOR APP STORE
+
+ANDROID
+run-- ionic capacitor sync android
+//this will build our application again and merge 
+//the config.json with the android build 
+
+IOS
+run-- ionic capacitor sync ios
+//this will build our application again and merge 
+//the config.json with the ios build 
+
+T0 ADD ICONS TO THE APPLICATION
+Go to Public/assests/icon
+Put your own icons and rename them to favicon and icon.
+The manifest.json file has the details of these icons.
+In the manifest.json customize the properties there to suite your webapp.
+such as the name and all.
+
+NOW THE ICONS NEED TO BE CONFIGURED ON MOBILE DEVICES
+ANDROID
+1). RUN npx cap open android to make capacitor open our app in android studio
+2). click on app and select image Assets.xcassets.
+3). Select your desire spalsh or png file.
+
+
+
+TO CONFIGURE OUR SPLASH SCREEN(i.e the screen that that shows when the app is starting up)
+1). google ape icons. Click on apetools.web....
+2). Select your splash screen, click on android and click on kapow
+3). Download the zip file 
+4). In your VSCODe go to android/app/src/main/res/draw..
+5). replace the drawable spash screens with the corresponding downloaded 
+    one. rename the png files and replace the spash screens with the 
+    new spach screens.
+
+IOS
+1). RUN npx cap open IOS to make capacitor open our app in XCODE
+2). click on app and select new and select image assest.
+3). Select your desire spalsh or png file.
+4). use apetools to generate both the icon and the splash screen.
+5). Select ios NOT ionic ios. NOT ionic ios o...
+6). Download the zipped file an navigate to the appicon folder.
+7). drag all the icons to their corresponding icon in xcode.
+
+
+PUBLISHING THE APP ON THE VARIOUS PLATFORMS
+Enable the service worker to trun this app into a full PWA.
+--- import * as serviceWorker from './serviceWorker
+
+add serviceWorker.register(); at the end of index.tsx
+
+USING FIREBASE HOSTING
+//FIRST BUILD THE PROJECT -- npm run build
+1). Create a firebase project.
+2). Click on hosting.
+3). npm install -g firebase-tools.
+4). run firebase login
+5). run firebase init 
+6). Select the hosting and choose the existing project 
+7). Select the build folder by typing build.
+8). click yes fro SPA
+9). click no for overwrite existing index.html
+
+DEPLOYING TO PLAY STORE
+Look at the documentation on Ionic site
+
+1). Sign the android app.
+2). npx cap open android
+3). select the app in android studio and select build.
+4). select generate signed bundle and leave the default android
+    app bundle and click next
+5). Add a keystore path. This will ensure its just you that is updating your  
+    app. Its more of a security feature. 
+6). You can create a new keystore and save this data in a very secure place.
+7). Build and finish.
+8). Create a developer portal console./$25 one time fee.
+9). Click Publish app on android store.
+
+DEPLOYING TO IOS STORE
+Look at the documentation on Ionic site
+Read Up on max course.
+
+1). Sign into the apple developer console.
+2). Select Certificates, Identifiers & Profiles.
+3). Click on Identifiers then click + sign and select appId
+4). Create a new app Id and select explicit under bundle ID.
+5). Use the same ID used in the capacitor.config.json.
+6). Select any special feature you want and register
+7). Go to App store Connect on the home page
+8). Create a new app on the app store page
+9). Create a bunble ID and create the app. The bunvle id isnt available immedaitely.
+    Your have to wait for a while.
+10). Go to Xcode and click Archive
+11). Click distribute app.    
+
+
+
+
